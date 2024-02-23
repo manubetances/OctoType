@@ -11,7 +11,7 @@ function removeClass(el, name) {
 
 function randomWord() {
   const randomIndex = Math.ceil(Math.random() * wordCount);
-  return words[randomIndex];
+  return words[randomIndex - 1];
 }
 
 //
@@ -35,7 +35,46 @@ document.getElementById('game').addEventListener('keyup', e => {
 	//
 	const currentLetter = document.querySelector('.letter.current');
 	//
-	const expected = currentLetter.innerHTML();
+	const currentWord = document.querySelector('.word.current');
+	//
+	const expected = currentLetter?.innerHTML || ' ';
+	//
+	const isLetter = key.length === 1 & key !== ' ';
+	//
+	const isSpace = key === ' ';
+
+	if (isLetter) {
+		if (currentLetter) {
+			addClass(currentLetter, key === expected ? 'correct' : 'incorrect');
+			removeClass(currentLetter, 'current');
+			if (currentLetter.nextSibling) {
+				addClass(currentLetter.nextSibling, 'current');
+			}
+		}
+		//
+		else {
+			const incorrectLetter = document.createElement('span');
+			incorrectLetter.innerHTML = key;
+			incorrectLetter.className = 'letter incorrect extra';
+			currentWord.appendChild(incorrectLetter);
+		}
+	}
+
+	if (isSpace) {
+		if (expected !== ' ') {
+			const lettersInvalidated = [...document.querySelectorAll('.word.current .letter:not(.correct)')];
+			lettersInvalidated.forEach(letter => {
+				addClass(letter, 'incorrect');
+			})
+		}
+		removeClass(currentWord, 'current');
+		addClass(currentWord.nextSibling, 'current');
+		if (currentLetter) {
+			removeClass(currentLetter, 'current');
+		}
+		addClass(currentWord.nextSibling.firstChild, 'current');
+	}
+
 });
 
 newGame();
