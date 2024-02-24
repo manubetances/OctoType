@@ -4,7 +4,7 @@
   --bgColor: #333;
   --textPrimary: #fff;
   --textSecondary: #666;
-  --primaryColor: #fd4;
+  --primaryColor: #dc2626;
 }
 
 body {
@@ -38,6 +38,8 @@ h1 {
 }
 
 button {
+  font-weight: 700;
+  font-size: 12pt;
   background: rgba(255, 255, 255, .2);
   border: 0;
   color: rgba(255, 255, 255, .5);
@@ -102,13 +104,18 @@ div.word {
   }
 }
 
+#cursor:focus {
+  display: block;
+}
+
 #cursor {
+  display: none;
   width: 2px;
   height: 1.6rem;
   background: var(--primaryColor);
   position: fixed;
-  top: 208px;
-  left: 430px;
+  top: 13rem;
+  left: 26.875rem;
   animation: blink .8s infinite;
 }
 

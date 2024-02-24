@@ -28,6 +28,11 @@ function newGame() {
   }
   addClass(document.querySelector('.word'), 'current');
   addClass(document.querySelector('.letter'), 'current');
+
+	// Cursor Poss
+	const cursor = document.getElementById('cursor');
+	cursor.style.left = game.getBoundingClientRect().left + 2 + 'px';
+
 }
 
 document.getElementById('game').addEventListener('keyup', e => {
@@ -42,6 +47,10 @@ document.getElementById('game').addEventListener('keyup', e => {
 	const isLetter = key.length === 1 & key !== ' ';
 	//
 	const isSpace = key === ' ';
+	//
+	const isBackspace = key === 'Backspace';
+	//
+	const isFirstLetter = currentLetter === currentWord.firstChild;
 
 	if (isLetter) {
 		if (currentLetter) {
@@ -74,6 +83,40 @@ document.getElementById('game').addEventListener('keyup', e => {
 		}
 		addClass(currentWord.nextSibling.firstChild, 'current');
 	}
+
+	// Manage Backspace Events
+	if (isBackspace) {
+		if (currentLetter && isFirstLetter) {
+			// make previous word current, last letter current
+			removeClass(currentWord, 'current');
+			addClass(currentWord.previousSibling, 'current');
+			removeClass(currentLetter, 'current');
+			addClass(currentWord.previousSibling.lastChild, 'current');
+			removeClass(currentWord.previousSibling.lastChild, 'incorrect');
+			removeClass(currentWord.previousSibling.lastChild, 'correct');
+		}
+		if (currentLetter && !isFirstLetter) {
+			// move back one letter, invalidate letter
+			removeClass(currentLetter, 'current');
+			addClass(currentLetter.previousSibling, 'current');
+			removeClass(currentLetter.previousSibling, 'incorrect');
+			removeClass(currentLetter.previousSibling, 'correct');
+		}
+		if (!currentLetter) {
+			addClass(currentWord.lastChild, 'current');
+			removeClass(currentWord.lastChild, 'incorrect');
+			removeClass(currentWord.lastChild, 'correct');
+		}
+	}
+
+	// Move Cursor
+	const nextLetter = document.querySelector('.letter.current');
+	const nextWord = document.querySelector('.word.current');
+	const cursor = document.getElementById('cursor');
+	//
+	cursor.style.top = (nextLetter || nextWord).getBoundingClientRect().top + 2 + 'px';
+	//
+	cursor.style.left = (nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right'] + 'px';
 
 });
 
